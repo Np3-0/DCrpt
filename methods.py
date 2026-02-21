@@ -1,4 +1,4 @@
-import base64, promptAi
+import base64, promptAi, sympy
 
 def b64String(text):
     text_bytes = text.encode("ascii")
@@ -82,20 +82,47 @@ def rsa():
     q = int(input("Enter q: "))
     n = int(input("Enter public key value (n): "))
     c = int(input("Enter ciphertext (c): "))
-    e = int(input("Enter e (usually 65337): "))
+    e = int(input("Enter e (usually 65537): "))
     d = int(input("Enter private key (d): "))
     totient = int(input("Enter totient: "))
     m = int(input("Enter message text (m): "))
     
+    # decrypts for other values
     if n == 0 and (p != 0 and q != 0):
         n = p * q
-        print("N: " + n)
-    elif p == 0 and (n != 0 and q != 0):
-        p = n / q
-        print("P: " + p)
-    elif q == 0 and (n != 0 and p != 0):
-        q = n / p
-        print("Q: " + q)
-    elif totient == 0 and (p != 0 and q != 0):
+        print("N: " + str(n))
+        
+    if p == 0 and (n != 0 and q != 0):
+        p = n // q
+        print("P: " + str(p))
+        
+    if q == 0 and (n != 0 and p != 0):
+        q = n // p
+        print("Q: " + str(q))
+        
+    if totient == 0 and (p != 0 and q != 0):
         totient = (p-1) * (q-1)
-        print("Totient: " + totient)
+        print("Totient: " + str(totient))
+        
+    if d == 0 and (totient != 0 and e != 0):
+        d = sympy.mod_inverse(e, totient)
+        print("D: " + str(d))
+        
+    if e == 0 and (totient != 0 and d != 0):
+        e = sympy.mod_inverse(d, totient)
+        print("E: " + str(e))
+        
+    if c == 0 and (m != 0 and e != 0 and n != 0):
+        c = pow(m, e, n)
+        print("C: " + str(c))
+        
+    if m == 0 and (c != 0 and d != 0 and n != 0):
+        m = pow(c, d, n)
+        print("M: " + str(m))
+        
+    if (p == 0 and q == 0) and n != 0:
+        factors = sympy.factorint(n)
+        if len(factors) == 2:
+            primes = list(factors.keys())
+            p, q = primes[0], primes[1]
+            print(f"P: {p}\nQ: {q}")
