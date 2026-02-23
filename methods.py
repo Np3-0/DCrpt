@@ -1,12 +1,16 @@
 import base64, promptAi, sympy
 
 def b64String(text):
-    text_bytes = text.encode("ascii")
-    b64_bytes = base64.b64encode(text_bytes)
-    b64_decode_bytes = base64.b64decode(text_bytes)
-    b64_message = b64_bytes.decode("ascii")
-    plain_message = b64_decode_bytes.decode("ascii")
-    print(f"Encoded Message: {b64_message}\nDecoded Message: {plain_message}")
+    try:
+        text_bytes = text.encode("ascii")
+        b64_bytes = base64.b64encode(text_bytes)
+        b64_message = b64_bytes.decode("ascii")
+        print(f"Encoded Message: {b64_message}")
+        b64_decode_bytes = base64.b64decode(text_bytes)
+        plain_message = b64_decode_bytes.decode("ascii")
+        print(f"Decoded Message: {plain_message}")
+    except Exception as e:
+        print(f"Error processing base64. This mostly occurred because you are only encrypting!")
     
 def caesar(client, text):
     res = ""
@@ -125,4 +129,4 @@ def rsa():
         if len(factors) == 2:
             primes = list(factors.keys())
             p, q = primes[0], primes[1]
-            print(f"P: {p}\nQ: {q}")
+            print(f"P: {p}\nQ: {q}\nIf this is all you got, run it again!")
